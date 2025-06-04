@@ -12,7 +12,8 @@ const TOKEN1_ADDRESS = process.env.TOKEN1_ADDRESS;
 //const API_KEY = process.env.API_KEY;
 const PANCAKE_SWAP_ADDRESS = process.env.PANCAKE_SWAP_ADDRESS;
 //const PROVIDER_URL = process.env.PROVIDER_URL;
-const AMOUNT = process.env.AMOUNT;
+const AMOUNT_BUY = process.env.AMOUNT_BUY;
+const AMOUNT_SELL = process.env.AMOUNT_SELL;
 
 const LOWER_BOUND = 0.01;
 const UPPER_BOUND = 0.02;
@@ -65,13 +66,13 @@ async function executeCycle() {
     const usdPrice = await getPrice("0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82"); // CAKE, pancakeswap token
     console.log("USD " + usdPrice);
     if(!hit_upper_bound) {
-        await swap(TOKEN0_ADDRESS, TOKEN1_ADDRESS, ethers.parseEther(AMOUNT));
+        await swap(TOKEN0_ADDRESS, TOKEN1_ADDRESS, ethers.parseEther(AMOUNT_BUY));
         if(usdPrice > UPPER_BOUND){
             hit_upper_bound = true;
         }
     }
     else {
-        await swap(TOKEN1_ADDRESS, TOKEN0_ADDRESS, ethers.parseEther(AMOUNT));
+        await swap(TOKEN1_ADDRESS, TOKEN0_ADDRESS, ethers.parseEther(AMOUNT_SELL));
         if(usdPrice < LOWER_BOUND){
             hit_upper_bound = false;
         }
@@ -80,7 +81,7 @@ async function executeCycle() {
 
 async function approve() {
     console.log("Aprovando o token...");
-    const tx = await token0.approve(PANCAKE_SWAP_ADDRESS, ethers.parseEther(AMOUNT));
+    const tx = await token0.approve(PANCAKE_SWAP_ADDRESS, ethers.parseEther(AMOUNT_BUY));
     console.log("Hash da transação:", tx.hash);
     console.log("Aguardando a transação ser confirmada...");
     const receipt = await tx.wait();
