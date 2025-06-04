@@ -15,8 +15,8 @@ const PANCAKE_SWAP_ADDRESS = process.env.PANCAKE_SWAP_ADDRESS;
 const AMOUNT_BUY = process.env.AMOUNT_BUY;
 const AMOUNT_SELL = process.env.AMOUNT_SELL;
 
-const LOWER_BOUND = 0.01;
-const UPPER_BOUND = 0.02;
+const UPPER_BOUND = process.env.UPPER_BOUND;
+const LOWER_BOUND = process.env.LOWER_BOUND;
 
 const PANCAKESWAP_ABI = require("./abi.pancakeswap.json");
 const ERC20_ABI = require("./abi.erc20.json");
