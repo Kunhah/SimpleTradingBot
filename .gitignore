@@ -1,0 +1,32 @@
+
+markdown
+CopyInsert
+# Ignore operating system files
+*.tmp
+*.DS_Store
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.iml
+
+# Ignore compiler output
+*.o
+*.obj
+*.exe
+
+# Ignore package manager files
+node_modules/
+package-lock.json
+yarn.lock
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore environment variables
+.env
+
+# Ignore common editor files
+*.swp
+*.swo
