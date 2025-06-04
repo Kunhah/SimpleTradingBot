@@ -10,7 +10,7 @@ const CHAIN_ID = process.env.CHAIN_ID;
 const TOKEN0_ADDRESS = process.env.TOKEN0_ADDRESS;
 const TOKEN1_ADDRESS = process.env.TOKEN1_ADDRESS;
 //const API_KEY = process.env.API_KEY;
-const ROUTER_ADDRESS = process.env.ROUTER_ADDRESS;
+const PANCAKE_SWAP_ADDRESS = process.env.PANCAKE_SWAP_ADDRESS;
 //const PROVIDER_URL = process.env.PROVIDER_URL;
 const AMOUNT = process.env.AMOUNT;
 
@@ -25,7 +25,7 @@ const PROVIDER_URL = new ethers.JsonRpcProvider(process.env.PROVIDER_URL);
 let wallet = process.env.WALLET;
 
 let signer = process.env.PRIVATE_KEY ? new ethers.Wallet(process.env.PRIVATE_KEY, PROVIDER_URL) : undefined;
-let router = signer?.provider ? new ethers.Contract(ROUTER_ADDRESS, PANCAKESWAP_ABI, signer) : undefined;
+let pancake_swap = signer?.provider ? new ethers.Contract(PANCAKE_SWAP_ADDRESS, PANCAKESWAP_ABI, signer) : undefined;
 let token0 = signer?.provider ? new ethers.Contract(TOKEN0_ADDRESS, ERC20_ABI, signer) : undefined;
 let token1 = signer?.provider ? new ethers.Contract(TOKEN1_ADDRESS, ERC20_ABI, signer) : undefined;
 
@@ -80,7 +80,7 @@ async function executeCycle() {
 
 async function approve() {
     console.log("Aprovando o token...");
-    const tx = await token0.approve(ROUTER_ADDRESS, ethers.parseEther(AMOUNT));
+    const tx = await token0.approve(PANCAKE_SWAP_ADDRESS, ethers.parseEther(AMOUNT));
     console.log("Hash da transação:", tx.hash);
     console.log("Aguardando a transação ser confirmada...");
     const receipt = await tx.wait();
@@ -102,7 +102,7 @@ async function swap (tokenIn, tokenOut, amountIn) {
         amountOutMinimum: 0,
         sqrtPriceLimitX96: 0
     }
-    const tx = await router.exactInputSingle(params, { 
+    const tx = await pancake_swap.exactInputSingle(params, { 
         from: wallet,
         gasPrice: ethers.parseUnits ("10", "gwei"),
         gasLimit: 250000
@@ -129,7 +129,7 @@ async function start(){
     wallet = process.env.WALLET ? wallet : wallet_;
 
     signer = process.env.PRIVATE_KEY ? signer : new ethers.Wallet(private_key, PROVIDER_URL);
-    router = process.env.PRIVATE_KEY ? router : new ethers.Contract(ROUTER_ADDRESS, PANCAKESWAP_ABI, signer);
+    pancake_swap = process.env.PRIVATE_KEY ? pancake_swap : new ethers.Contract(PANCAKE_SWAP_ADDRESS, PANCAKESWAP_ABI, signer);
     token0 = process.env.PRIVATE_KEY ? token0 : new ethers.Contract(TOKEN0_ADDRESS, ERC20_ABI, signer);
     token1 = process.env.PRIVATE_KEY ? token1 : new ethers.Contract(TOKEN1_ADDRESS, ERC20_ABI, signer);
 
